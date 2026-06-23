@@ -1,0 +1,598 @@
+/* ── Fonts ────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Visa Dialect';
+  src: url('assets/fonts/VisaDialect-Light.woff2') format('woff2'),
+       url('assets/fonts/VisaDialect-Light.woff') format('woff');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visa Dialect';
+  src: url('assets/fonts/VisaDialect-Regular.woff2') format('woff2'),
+       url('assets/fonts/VisaDialect-Regular.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visa Dialect';
+  src: url('assets/fonts/VisaDialect-Medium.woff2') format('woff2'),
+       url('assets/fonts/VisaDialect-Medium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Visa Dialect';
+  src: url('assets/fonts/VisaDialect-Semibold.woff2') format('woff2'),
+       url('assets/fonts/VisaDialect-Semibold.woff') format('woff');
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* ── Design tokens ────────────────────────────────────────────────── */
+:root {
+  --visa-blue:            #112AA7;
+  --visa-gold:            #FCC015;
+  --visa-dark-navy:       #15195A;
+  --red:                  #AD2929;
+  --font-primary:         #02041C;
+  --font-secondary:       #464853;
+  --font-tertiary:        #808080;
+  --component-border:     #808080;
+  --component-background: #F0F0F0;
+  --component-active:     #1434CB;
+  --graph-border:         #ABABAB;
+  --graph-line:           #CCCACA;
+  --chart-blue:           #112AA7;
+  --chart-light-blue:     #98C7E7;
+  --chart-violet:         #9187D6;
+  --chart-lavender:       #CDC4E0;
+  --chart-light-lavender: #F3F2FD;
+  --white:                #FFFFFF;
+
+  --font-stack: 'Visa Dialect', system-ui, -apple-system, sans-serif;
+  --panel-radius: 4px;
+  --panel-shadow: 0 1px 4px rgba(21,25,90,0.08), 0 0 0 1px rgba(21,25,90,0.06);
+  --content-max: 1600px;
+  --page-pad: 24px;
+  --grid-gap: 24px;
+  --right-col-width: 370px;
+}
+
+/* ── Reset & base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; }
+
+body {
+  font-family: var(--font-stack);
+  color: var(--font-primary);
+  background: #F5F5F5;
+  min-height: 100vh;
+}
+
+ul { list-style: none; }
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ── Top navigation ───────────────────────────────────────────────── */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  background: var(--visa-dark-navy);
+  padding: 0 var(--page-pad);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-shrink: 0;
+}
+
+.visa-logo {
+  display: block;
+  height: 23px;
+  width: auto;
+}
+
+.nav-app-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+/* Right side: stretches to full nav height so child links can too */
+.nav-right {
+  display: flex;
+  align-self: stretch;   /* fills the 80px nav height */
+  align-items: center;   /* icons stay vertically centered within 80px */
+  gap: 40px;
+}
+
+.nav-links {
+  display: flex;
+  align-self: stretch;   /* fills the 80px nav-right height */
+  align-items: center;   /* non-active links float to vertical center */
+  gap: 4px;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;      /* gives non-active links a proper pill-shaped hover area */
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.80);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+
+/* Hover: simple rounded background on non-active links */
+.nav-link:not(.nav-link--active):hover {
+  color: var(--white);
+  background: rgba(255,255,255,0.12);
+  border-radius: 6px;
+}
+
+/* Active link: explicit 80px = full nav height */
+.nav-link--active {
+  height: 80px;
+  isolation: isolate;
+  color: var(--white);
+  font-weight: 500;
+}
+
+/*
+ * Blue pill: bottom-anchored 12px above the gold underline.
+ * This mirrors the Figma structure: Tab Element Frame has pb-12px before the line.
+ * Pill occupies bottom 12px+46px = 58px zone; above it is ~22px breathing room.
+ */
+.nav-link--active::before {
+  content: '';
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  height: 46px;
+  background: var(--visa-blue);
+  border-radius: 6px;
+  z-index: -1;
+}
+
+/* Gold underline: pinned to the very bottom of the 80px nav bar */
+.nav-link--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--visa-gold);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nav-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.nav-icon-btn:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+/* ── Main content ─────────────────────────────────────────────────── */
+.main-content {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 64px var(--page-pad) 72px;
+}
+
+.page-title {
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--font-primary);
+  margin-bottom: 28px;
+  letter-spacing: 0;
+}
+
+/* ── Filter bar ───────────────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* Label sits to the left of the dropdown, inline */
+.filter-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--font-secondary);
+  white-space: nowrap;
+}
+
+.filter-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  min-height: 38px;
+  border: 1px solid var(--component-border);
+  border-radius: 4px;
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+/* Per-field widths sized to their longest option */
+.filter-group--country          .filter-dropdown { width: 270px; }
+.filter-group--year             .filter-dropdown { width: 110px; }
+.filter-group--value-type       .filter-dropdown { width: 210px; }
+.filter-group--transaction-type .filter-dropdown { width: 190px; }
+.filter-group--card-type        .filter-dropdown { width: 150px; }
+
+.filter-dropdown:hover {
+  border-color: var(--visa-blue);
+  background: #F7F8FF;
+}
+
+.filter-value {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--font-primary);
+  flex: 1;
+}
+
+/* Chevron is always visa-blue; rotates when dropdown is open */
+.filter-chevron {
+  color: var(--visa-blue);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.filter-dropdown.is-open {
+  border-color: var(--visa-blue);
+}
+
+.filter-dropdown.is-open .filter-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown menu ────────────────────────────────────────────────── */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: -1px;
+  min-width: calc(100% + 2px);
+  z-index: 500;
+  background: var(--white);
+  border: 1px solid var(--component-border);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  padding: 4px 0;
+  overflow: hidden;
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: var(--font-stack);
+  color: var(--font-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dropdown-option:hover {
+  background: var(--component-background);
+}
+
+.dropdown-option--selected {
+  color: var(--visa-blue);
+  font-weight: 500;
+}
+
+.dropdown-checkmark {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--visa-blue);
+}
+
+.dropdown-option:not(.dropdown-option--selected) .dropdown-checkmark {
+  visibility: hidden;
+}
+
+/* ── Dashboard grid ───────────────────────────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr var(--right-col-width);
+  gap: var(--grid-gap);
+  align-items: start;
+}
+
+.col-left,
+.col-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--grid-gap);
+}
+
+/* ── Chart sections & panels ──────────────────────────────────────── */
+.chart-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--font-primary);
+  letter-spacing: -0.1px;
+}
+
+.col-left .section-title {
+  letter-spacing: 0;
+}
+
+.col-left .panel-header {
+  margin-bottom: 4px;
+}
+
+.col-right .section-title {
+  font-size: 19px;
+}
+
+.chart-panel {
+  background: var(--white);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Panel header (toggle + legend row) ───────────────────────────── */
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.panel-header--no-legend {
+  justify-content: flex-start;
+}
+
+/* ── Chart toggle buttons ─────────────────────────────────────────── */
+.chart-toggle {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--component-active);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 400;
+  font-family: var(--font-stack);
+  color: var(--font-secondary);
+  background: var(--white);
+  border: none;
+  border-right: 1px solid var(--component-active);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.toggle-btn:last-child {
+  border-right: none;
+}
+
+.toggle-btn:hover {
+  color: var(--font-primary);
+  background: var(--component-background);
+}
+
+.toggle-btn--active {
+  color: var(--font-primary);
+  background: var(--component-background);
+  font-weight: 500;
+  /* heavy bottom stroke + inner depth shadow from Figma */
+  box-shadow:
+    inset 0 -3px 0 var(--component-active),
+    inset 0 0 4px 1px rgba(0,0,0,0.20),
+    inset 0 0 4px 0px rgba(0,0,0,0.10);
+}
+
+.toggle-btn--active:hover {
+  background: #E4E4E4;
+  box-shadow:
+    inset 0 -3px 0 var(--component-active),
+    inset 0 0 4px 1px rgba(0,0,0,0.20),
+    inset 0 0 4px 0px rgba(0,0,0,0.10);
+}
+
+/* ── Chart legend (monthly trends color key) ──────────────────────── */
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 13px;
+  color: var(--font-secondary);
+}
+
+/* ── Panel text elements ──────────────────────────────────────────── */
+.panel-subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--font-secondary);
+  line-height: 1.4;
+}
+
+.panel-note {
+  font-size: 16px;
+  color: var(--font-tertiary);
+  margin-top: -4px;
+  margin-bottom: 10px;
+}
+
+.panel-total {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--font-primary);
+  letter-spacing: -0.2px;
+}
+
+.panel-overall {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--font-primary);
+  letter-spacing: -0.2px;
+}
+
+/* ── Canvas wrappers (height control) ────────────────────────────── */
+.chart-canvas-wrap {
+  position: relative;
+}
+
+.chart-canvas-wrap canvas {
+  display: block;
+}
+
+.chart-canvas-wrap--monthly {
+  height: 700px;
+}
+
+.chart-canvas-wrap--industry {
+  height: 700px;
+}
+
+.chart-canvas-wrap--cities {
+  height: 190px;
+}
+
+.chart-canvas-wrap--donut {
+  height: 223px;
+}
+
+.chart-canvas-wrap--crossborder {
+  height: 180px;
+}
+
+/* Cross-border ticket section nudged 1px to align its panel top with Industry panel top */
+#section-cross-ticket { margin-top: 1px; }
+
+/* ── Footer ───────────────────────────────────────────────────────── */
+.site-footer {
+  background: #E9E9E9;
+  width: 100%;
+}
+
+.footer-img {
+  display: block;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  height: auto;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 1599px) {
+  :root {
+    --right-col-width: 320px;
+    --page-pad: 20px;
+  }
+
+  .page-title { font-size: 40px; }
+
+  .chart-canvas-wrap--monthly     { height: 540px; }
+  .chart-canvas-wrap--industry    { height: 540px; }
+  .chart-canvas-wrap--cities      { height: 165px; }
+  .chart-canvas-wrap--donut       { height: 195px; }
+  .chart-canvas-wrap--crossborder { height: 155px; }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .col-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--grid-gap);
+  }
+
+  .chart-canvas-wrap--monthly  { height: 360px; }
+  .chart-canvas-wrap--industry { height: 480px; }
+}
+
+@media (max-width: 640px) {
+  .col-right {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-app-name  { display: none; }
+  .page-title    { font-size: 32px; }
+  .filter-bar    { gap: 12px; }
+}

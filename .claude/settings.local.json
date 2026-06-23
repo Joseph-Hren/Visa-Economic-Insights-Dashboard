@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Figma__get_screenshot",
+      "mcp__claude_ai_Figma__get_design_context",
+      "mcp__claude_ai_Figma__get_metadata",
+      "Bash(open *)",
+      "Bash(python3 -m http.server 8743)",
+      "Bash(curl -s http://localhost:8743/)",
+      "Bash(python3 -m http.server 8744)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -m http.server 8746)",
+      "Bash(node --check /Users/joseph/Claude/visa-vgih/data.js)",
+      "Bash(node --check /Users/joseph/Claude/visa-vgih/filters.js)",
+      "Bash(node --check /Users/joseph/Claude/visa-vgih/charts.js)",
+      "Bash(node *)"
+    ]
+  }
+}

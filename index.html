@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visa Global Insights Hub — Economic Insights</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── Top navigation ─────────────────────────────────────────── -->
+  <nav class="top-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <img src="assets/visa-logo.svg" alt="Visa" class="visa-logo">
+      <span class="nav-app-name">Visa Government Insights Hub</span>
+    </div>
+
+    <div class="nav-right">
+      <ul class="nav-links" role="list">
+        <li><a href="#" class="nav-link nav-link--active" aria-current="page">Economic Insights</a></li>
+        <li><a href="#" class="nav-link">SMB Insights</a></li>
+        <li><a href="#" class="nav-link">Destination Insights</a></li>
+        <li><a href="#" class="nav-link">Admin</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="nav-icon-btn" aria-label="Search">
+          <img src="assets/search.svg" alt="" width="24" height="24">
+        </button>
+        <button class="nav-icon-btn" aria-label="Notifications">
+          <img src="assets/notification.svg" alt="" width="40" height="40">
+        </button>
+        <button class="nav-icon-btn" aria-label="Account">
+          <img src="assets/user-profile.svg" alt="" width="60" height="48">
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <h1 class="page-title">Economic Insights</h1>
+
+    <!-- ── Filter bar ──────────────────────────────────────────── -->
+    <div class="filter-bar" role="search" aria-label="Dashboard filters">
+
+      <div class="filter-group filter-group--country">
+        <span class="filter-label">Country</span>
+        <div class="filter-dropdown" role="button" tabindex="0" aria-haspopup="listbox" aria-label="Country: Canada">
+          <span class="filter-value">Canada</span>
+          <svg class="filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="filter-group filter-group--year">
+        <span class="filter-label">Year</span>
+        <div class="filter-dropdown" role="button" tabindex="0" aria-haspopup="listbox" aria-label="Year: 2026">
+          <span class="filter-value">2026</span>
+          <svg class="filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="filter-group filter-group--value-type">
+        <span class="filter-label">Value type</span>
+        <div class="filter-dropdown" role="button" tabindex="0" aria-haspopup="listbox" aria-label="Value Type: Total Spend">
+          <span class="filter-value">Total Spend</span>
+          <svg class="filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="filter-group filter-group--transaction-type">
+        <span class="filter-label">Transaction type</span>
+        <div class="filter-dropdown" role="button" tabindex="0" aria-haspopup="listbox" aria-label="Transaction Type: All">
+          <span class="filter-value">All</span>
+          <svg class="filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="filter-group filter-group--card-type">
+        <span class="filter-label">Card type</span>
+        <div class="filter-dropdown" role="button" tabindex="0" aria-haspopup="listbox" aria-label="Card Type: All">
+          <span class="filter-value">All</span>
+          <svg class="filter-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+    </div><!-- /filter-bar -->
+
+    <!-- ── Dashboard grid ─────────────────────────────────────── -->
+    <div class="dashboard-grid">
+
+      <!-- ── Left column ────────────────────────────────────── -->
+      <div class="col-left">
+
+        <!-- Chart 1: Monthly Spend Trends -->
+        <section class="chart-section" aria-label="Monthly spend trends">
+          <h2 class="section-title">Monthly spend trends</h2>
+          <div class="chart-panel">
+            <div class="panel-header">
+              <div class="chart-toggle">
+                <button class="toggle-btn toggle-btn--active" data-chart="monthly" data-view="line">Line chart</button>
+                <button class="toggle-btn" data-chart="monthly" data-view="bar">Bar chart</button>
+              </div>
+              <div class="chart-legend" id="monthly-legend">
+                <div class="legend-item">
+                  <span class="legend-swatch" style="background:#112AA7"></span>
+                  <span class="legend-label">2026</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-swatch" style="background:#9187D6"></span>
+                  <span class="legend-label">2025</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-swatch" style="background:#98C7E7"></span>
+                  <span class="legend-label">2024</span>
+                </div>
+              </div>
+            </div>
+            <p class="panel-subtitle" id="monthly-subtitle">2026 year-to-date and previous two years</p>
+            <p class="panel-note">Hover over data points to view monthly spend values.</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--monthly">
+              <canvas id="chart-monthly"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chart 2: Industry Spend Overview -->
+        <section class="chart-section" aria-label="Industry spend overview">
+          <h2 class="section-title">Industry spend overview</h2>
+          <div class="chart-panel">
+            <div class="panel-header panel-header--no-legend">
+              <div class="chart-toggle">
+                <button class="toggle-btn toggle-btn--active" data-chart="industry" data-view="bar">Industries for selected year</button>
+                <button class="toggle-btn" data-chart="industry" data-view="heatmap">Heat map of YoY growth</button>
+              </div>
+            </div>
+            <p class="panel-subtitle" id="industry-subtitle">Total spend by industry, 2026 year to date (January – June)</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--industry">
+              <canvas id="chart-industry"></canvas>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /col-left -->
+
+      <!-- ── Right column ───────────────────────────────────── -->
+      <div class="col-right">
+
+        <!-- Chart 3: Top 5 Cities by Total Spend -->
+        <section class="chart-section" aria-label="Top 5 cities by total spend">
+          <h2 class="section-title">Top 5 cities by total spend</h2>
+          <div class="chart-panel">
+            <div class="chart-canvas-wrap chart-canvas-wrap--cities">
+              <canvas id="chart-cities-spend"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chart 4: Top 5 Cities by YoY Growth -->
+        <section class="chart-section" aria-label="Top 5 cities by year over year growth">
+          <h2 class="section-title">Top 5 cities by Year over Year growth</h2>
+          <div class="chart-panel">
+            <div class="chart-canvas-wrap chart-canvas-wrap--cities">
+              <canvas id="chart-cities-yoy"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chart 5: Spend by Card Type -->
+        <section class="chart-section" aria-label="Spend by card type">
+          <h2 class="section-title">Spend by card type</h2>
+          <div class="chart-panel">
+            <p class="panel-total" id="card-type-total">Total: $68.0 Billion</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--donut">
+              <canvas id="chart-card-type"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chart 6: Cross-Border Average Ticket Size -->
+        <section class="chart-section" id="section-cross-ticket" aria-label="Cross-border average ticket size">
+          <h2 class="section-title">Cross-border average ticket size</h2>
+          <div class="chart-panel">
+            <p class="panel-overall" id="cross-ticket-overall">Overall: $64.80</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--crossborder">
+              <canvas id="chart-cross-ticket"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chart 7: Cross-Border Total Spend -->
+        <section class="chart-section" aria-label="Cross-border total spend">
+          <h2 class="section-title">Cross-border total spend</h2>
+          <div class="chart-panel">
+            <p class="panel-overall" id="cross-spend-overall">Overall: $68.0 Billion</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--crossborder">
+              <canvas id="chart-cross-spend"></canvas>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /col-right -->
+
+    </div><!-- /dashboard-grid -->
+
+  </main><!-- /main-content -->
+
+  <footer class="site-footer">
+    <img src="assets/footer.svg" alt="" class="footer-img" role="presentation">
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="data.js"></script>
+  <script src="charts.js"></script>
+  <script src="filters.js"></script>
+</body>
+</html>
