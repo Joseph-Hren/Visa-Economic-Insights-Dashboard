@@ -361,7 +361,14 @@ function heatmapHitTest(cx, cy, layout) {
 function renderIndustryHeatmap(canvas, hmData) {
   const wrap = canvas.parentElement;
   const W    = wrap.offsetWidth;
-  const H    = wrap.offsetHeight;
+
+  /* Ensure the wrapper is tall enough to show all rows at a legible cell height */
+  const ROWS_COUNT  = hmData.rows.length;
+  const MIN_CELL_H  = 36;
+  const minH = 6 + 36 + ROWS_COUNT * MIN_CELL_H + (ROWS_COUNT - 1) * 6 + 4;
+  const H    = Math.max(wrap.offsetHeight, minH);
+  if (H > wrap.offsetHeight) wrap.style.height = H + 'px';
+
   canvas.width  = W;
   canvas.height = H;
 
@@ -490,6 +497,13 @@ function renderIndustryChart(d, state, chartType = 'bar') {
   destroyChart('industry');
   const ctx = document.getElementById('chart-industry');
   if (!ctx) return;
+
+  /* Reset any height the heatmap may have expanded to, so the bar chart
+     uses the CSS-defined height for the current breakpoint */
+  if (chartType !== 'heatmap') {
+    const wrapEl = ctx.parentElement;
+    if (wrapEl) wrapEl.style.height = '';
+  }
 
   /* update subtitle */
   const subEl = document.getElementById('industry-subtitle');
