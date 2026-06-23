@@ -251,6 +251,7 @@ function renderMonthlyChart(d, state, chartType = 'line') {
       plugins: {
         legend: { display: false },
         tooltip: {
+          itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
           callbacks: {
             label(ctx) {
               const v = ctx.raw;
