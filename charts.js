@@ -287,6 +287,74 @@ function renderMonthlyChart(d, state, chartType = 'line') {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Heatmap tooltip helpers
+═══════════════════════════════════════════════════════════════════ */
+function ensureHeatmapTooltip() {
+  let el = document.getElementById('heatmap-tooltip');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'heatmap-tooltip';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+function hideHeatmapTooltip() {
+  const el = document.getElementById('heatmap-tooltip');
+  if (el) el.style.display = 'none';
+}
+
+function showHeatmapTooltip(hit, clientX, clientY, isTouch) {
+  const el   = ensureHeatmapTooltip();
+  const sign  = hit.value >= 0 ? '+' : '';
+  const color = hit.value >= 0 ? '#112AA7' : '#AD2929';
+
+  el.innerHTML =
+    `<div class="htm-industry">${hit.industry}</div>` +
+    `<div class="htm-year">${hit.year}</div>` +
+    `<div class="htm-value" style="color:${color}">${sign}${hit.value.toFixed(1)}%</div>` +
+    `<div class="htm-label">Year-over-year growth</div>`;
+
+  el.style.display = 'block';
+
+  const TW = el.offsetWidth  || 170;
+  const TH = el.offsetHeight || 90;
+  const VW = window.innerWidth;
+  const VH = window.innerHeight;
+  let x, y;
+
+  if (isTouch) {
+    x = clientX - TW / 2;
+    y = clientY - TH - 20;
+    if (y < 10) y = clientY + 28;
+  } else {
+    x = clientX + 16;
+    y = clientY + 16;
+    if (x + TW > VW - 10) x = clientX - TW - 16;
+    if (y + TH > VH - 10) y = clientY - TH - 16;
+  }
+
+  el.style.left = Math.max(8, x) + 'px';
+  el.style.top  = Math.max(8, y) + 'px';
+}
+
+function heatmapHitTest(cx, cy, layout) {
+  const { gridX, PAD_TOP, HEADER_H, COLS, ROWS, cellW, cellH, CELL_GAP, years, rows } = layout;
+  if (cx < gridX || cy < PAD_TOP + HEADER_H) return null;
+
+  const col = Math.floor((cx - gridX) / (cellW + CELL_GAP));
+  const row = Math.floor((cy - PAD_TOP - HEADER_H) / (cellH + CELL_GAP));
+  if (col < 0 || col >= COLS || row < 0 || row >= ROWS) return null;
+
+  /* confirm we're inside the cell, not in a gap */
+  const cellX = gridX + col * (cellW + CELL_GAP);
+  const rowY  = PAD_TOP + HEADER_H + row * (cellH + CELL_GAP);
+  if (cx > cellX + cellW || cy > rowY + cellH) return null;
+
+  return { year: years[col], industry: rows[row].name, value: rows[row].values[col] };
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Chart 2 — Industry Spend Overview (heatmap view)
 ═══════════════════════════════════════════════════════════════════ */
 function renderIndustryHeatmap(canvas, hmData) {
@@ -375,12 +443,49 @@ function renderIndustryHeatmap(canvas, hmData) {
       ctx.fillText(`${sign}${val.toFixed(1)}%`, cellX + cellW / 2, midY);
     }
   }
+
+  /* ── Tooltip interaction ─────────────────────────────────────── */
+  const layout = { gridX, PAD_TOP, HEADER_H, COLS, ROWS, cellW, cellH, CELL_GAP, years, rows };
+
+  const onMove = e => {
+    const rect = canvas.getBoundingClientRect();
+    const hit  = heatmapHitTest(e.clientX - rect.left, e.clientY - rect.top, layout);
+    hit ? showHeatmapTooltip(hit, e.clientX, e.clientY, false) : hideHeatmapTooltip();
+  };
+
+  const onLeave = () => hideHeatmapTooltip();
+
+  const onTouch = e => {
+    const touch = e.touches[0];
+    const rect  = canvas.getBoundingClientRect();
+    const hit   = heatmapHitTest(touch.clientX - rect.left, touch.clientY - rect.top, layout);
+    if (!hit) return;
+    showHeatmapTooltip(hit, touch.clientX, touch.clientY, true);
+    clearTimeout(canvas._hmTimer);
+    canvas._hmTimer = setTimeout(hideHeatmapTooltip, 3000);
+  };
+
+  canvas._hmHandlers = { move: onMove, leave: onLeave, touch: onTouch };
+  canvas.addEventListener('mousemove',  onMove);
+  canvas.addEventListener('mouseleave', onLeave);
+  canvas.addEventListener('touchstart', onTouch, { passive: true });
 }
 
 /* ═══════════════════════════════════════════════════════════════════
    Chart 2 — Industry Spend Overview (bar view)
 ═══════════════════════════════════════════════════════════════════ */
 function renderIndustryChart(d, state, chartType = 'bar') {
+  /* remove previous heatmap listeners and hide any open tooltip */
+  const prevCanvas = document.getElementById('chart-industry');
+  if (prevCanvas && prevCanvas._hmHandlers) {
+    prevCanvas.removeEventListener('mousemove',  prevCanvas._hmHandlers.move);
+    prevCanvas.removeEventListener('mouseleave', prevCanvas._hmHandlers.leave);
+    prevCanvas.removeEventListener('touchstart', prevCanvas._hmHandlers.touch);
+    clearTimeout(prevCanvas._hmTimer);
+    delete prevCanvas._hmHandlers;
+  }
+  hideHeatmapTooltip();
+
   destroyChart('industry');
   const ctx = document.getElementById('chart-industry');
   if (!ctx) return;

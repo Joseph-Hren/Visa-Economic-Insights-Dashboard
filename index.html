@@ -24,14 +24,21 @@
       </ul>
 
       <div class="nav-actions">
-        <button class="nav-icon-btn" aria-label="Search">
+        <button class="nav-icon-btn nav-icon-desktop" aria-label="Search">
           <img src="assets/search.svg" alt="" width="24" height="24">
         </button>
-        <button class="nav-icon-btn" aria-label="Notifications">
+        <button class="nav-icon-btn nav-icon-desktop" aria-label="Notifications">
           <img src="assets/notification.svg" alt="" width="40" height="40">
         </button>
-        <button class="nav-icon-btn" aria-label="Account">
+        <button class="nav-icon-btn nav-icon-desktop" aria-label="Account">
           <img src="assets/user-profile.svg" alt="" width="60" height="48">
+        </button>
+        <button class="nav-icon-btn nav-hamburger" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -97,6 +104,38 @@
 
     </div><!-- /filter-bar -->
 
+    <!-- ── Mobile filter bar (hidden on desktop) ─────────────── -->
+    <div class="mobile-filter-bar" id="mobile-filter-bar">
+      <button class="mobile-show-filters-btn" id="show-all-filters" aria-label="Open chart filters">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <line x1="1" y1="3.5" x2="15" y2="3.5"/>
+          <line x1="3" y1="7.5" x2="13" y2="7.5"/>
+          <line x1="6" y1="11.5" x2="10" y2="11.5"/>
+        </svg>
+        Show all filters
+      </button>
+      <div class="filter-chips" id="filter-chips"></div>
+    </div>
+
+    <!-- ── Filter modal (shared mobile/desktop overlay) ──────── -->
+    <div class="filter-modal-overlay" id="filter-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Chart filters">
+      <div class="filter-modal">
+        <div class="filter-modal-header">
+          <h2 class="filter-modal-title">Chart filters</h2>
+          <button class="filter-modal-close" id="filter-modal-close" aria-label="Close filters">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="filter-modal-body" id="filter-modal-body"></div>
+        <div class="filter-modal-footer">
+          <button class="filter-modal-btn filter-modal-btn--primary" id="filter-modal-accept">Accept</button>
+          <button class="filter-modal-btn filter-modal-btn--secondary" id="filter-modal-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ── Dashboard grid ─────────────────────────────────────── -->
     <div class="dashboard-grid">
 
@@ -141,8 +180,14 @@
           <div class="chart-panel">
             <div class="panel-header panel-header--no-legend">
               <div class="chart-toggle">
-                <button class="toggle-btn toggle-btn--active" data-chart="industry" data-view="bar">Industries for selected year</button>
-                <button class="toggle-btn" data-chart="industry" data-view="heatmap">Heat map of YoY growth</button>
+                <button class="toggle-btn toggle-btn--active" data-chart="industry" data-view="bar">
+                  <span class="toggle-full">Industries for selected year</span>
+                  <span class="toggle-short">Industries: selected year</span>
+                </button>
+                <button class="toggle-btn" data-chart="industry" data-view="heatmap">
+                  <span class="toggle-full">Heat map of YoY growth</span>
+                  <span class="toggle-short">Heat map: YoY growth</span>
+                </button>
               </div>
             </div>
             <p class="panel-subtitle" id="industry-subtitle">Total spend by industry, 2026 year to date (January – June)</p>

@@ -170,10 +170,156 @@ FILTER_CONFIG.forEach(({ groupClass, stateKey, options }) => {
         updateMonthlySubtitle(value);
         updateMonthlyLegend(value);
       }
+      renderChips();
       renderAllCharts(state, monthlyChartType, industryChartType);
     });
   });
 });
+
+/* ── Mobile: chip defaults (values that show always or only when non-default) */
+const CHIP_DEFAULTS = {
+  country:         'canada',
+  year:            2026,
+  valueType:       'totalSpend',
+  transactionType: 'all',
+  cardType:        'all',
+};
+
+/* ── Sync desktop filter bar display text to match current state ─── */
+function syncFilterBar() {
+  FILTER_CONFIG.forEach(({ groupClass, stateKey, options }) => {
+    const group = document.querySelector(`.${groupClass}`);
+    if (!group) return;
+    const valueEl = group.querySelector('.filter-value');
+    const opt = options.find(o => o.value === state[stateKey]);
+    if (valueEl && opt) valueEl.textContent = opt.label;
+  });
+  updateMonthlySubtitle(state.year);
+  updateMonthlyLegend(state.year);
+}
+
+/* ── Render mobile filter chips ─────────────────────────────────── */
+function renderChips() {
+  const container = document.getElementById('filter-chips');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const ALWAYS_SHOW = ['country', 'year', 'valueType'];
+
+  FILTER_CONFIG.forEach(({ stateKey, options }) => {
+    const val = state[stateKey];
+    const isDefault = val === CHIP_DEFAULTS[stateKey];
+    if (!ALWAYS_SHOW.includes(stateKey) && isDefault) return;
+
+    const opt = options.find(o => o.value === val);
+    const label = opt ? opt.label : String(val);
+
+    const chip = document.createElement('div');
+    chip.className = 'filter-chip';
+
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'filter-chip-label';
+    labelSpan.textContent = label;
+    chip.appendChild(labelSpan);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'filter-chip-close';
+    closeBtn.setAttribute('aria-label', `Reset ${stateKey} filter`);
+    closeBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    closeBtn.addEventListener('click', () => {
+      state[stateKey] = CHIP_DEFAULTS[stateKey];
+      syncFilterBar();
+      renderChips();
+      renderAllCharts(state, monthlyChartType, industryChartType);
+    });
+    chip.appendChild(closeBtn);
+
+    container.appendChild(chip);
+  });
+}
+
+/* ── Filter modal ───────────────────────────────────────────────── */
+let modalState = null;
+
+function openFilterModal() {
+  modalState = { ...state };
+
+  const overlay = document.getElementById('filter-modal-overlay');
+  const body    = document.getElementById('filter-modal-body');
+  if (!overlay || !body) return;
+
+  body.innerHTML = '';
+
+  const LABELS = {
+    country: 'Country', year: 'Year', valueType: 'Value type',
+    transactionType: 'Transaction type', cardType: 'Card type',
+  };
+
+  FILTER_CONFIG.forEach(({ stateKey, options }) => {
+    const group = document.createElement('div');
+    group.className = 'filter-modal-group';
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'filter-modal-label';
+    labelEl.textContent = LABELS[stateKey] || stateKey;
+    group.appendChild(labelEl);
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'filter-dropdown';
+    dropdown.setAttribute('role', 'button');
+    dropdown.setAttribute('tabindex', '0');
+
+    const valueEl = document.createElement('span');
+    valueEl.className = 'filter-value';
+    const currentOpt = options.find(o => o.value === modalState[stateKey]);
+    valueEl.textContent = currentOpt ? currentOpt.label : String(modalState[stateKey]);
+    dropdown.appendChild(valueEl);
+
+    const svg  = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'filter-chevron');
+    svg.setAttribute('width', '14'); svg.setAttribute('height', '14');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+    const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    poly.setAttribute('points', '6 9 12 15 18 9');
+    svg.appendChild(poly);
+    dropdown.appendChild(svg);
+
+    dropdown.addEventListener('click', e => {
+      e.stopPropagation();
+      if (activeDropdown === dropdown) { closeActiveMenu(); return; }
+      openDropdown(dropdown, options, modalState[stateKey], (value, label) => {
+        modalState[stateKey] = value;
+        valueEl.textContent = label;
+      });
+    });
+
+    group.appendChild(dropdown);
+    body.appendChild(group);
+  });
+
+  overlay.classList.add('is-open');
+  overlay.setAttribute('aria-hidden', 'false');
+}
+
+function closeFilterModal() {
+  modalState = null;
+  closeActiveMenu();
+  const overlay = document.getElementById('filter-modal-overlay');
+  if (!overlay) return;
+  overlay.classList.remove('is-open');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function acceptFilterModal() {
+  if (!modalState) return;
+  Object.assign(state, modalState);
+  syncFilterBar();
+  closeFilterModal();
+  renderChips();
+  renderAllCharts(state, monthlyChartType, industryChartType);
+}
 
 /* ── Chart toggle buttons ───────────────────────────────────────── */
 document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -196,7 +342,25 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
   });
 });
 
+/* ── Wire modal buttons ─────────────────────────────────────────── */
+document.getElementById('show-all-filters')
+  ?.addEventListener('click', openFilterModal);
+
+document.getElementById('filter-modal-close')
+  ?.addEventListener('click', closeFilterModal);
+
+document.getElementById('filter-modal-accept')
+  ?.addEventListener('click', acceptFilterModal);
+
+document.getElementById('filter-modal-cancel')
+  ?.addEventListener('click', closeFilterModal);
+
+/* Close modal on overlay click (outside the modal card) */
+document.getElementById('filter-modal-overlay')
+  ?.addEventListener('click', e => { if (e.target.id === 'filter-modal-overlay') closeFilterModal(); });
+
 /* ── Initial chart render ───────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   renderAllCharts(state, monthlyChartType, industryChartType);
+  renderChips();
 });
