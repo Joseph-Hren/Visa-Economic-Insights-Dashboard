@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VGIH — Mobile Preview</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      background: #C4C9D9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      font-family: system-ui, sans-serif;
+    }
+
+    /* ── Phone outer shell ─────────────────────────────────────────── */
+    .phone {
+      position: relative;
+      background: #131313;
+      border-radius: 52px;
+      padding: 14px;
+      /* Multi-layer shadow: inner highlight rim, outer edge, drop shadow */
+      box-shadow:
+        inset 0 0 0 1px #4a4a4a,
+        0 0 0 1px #111,
+        0 50px 120px rgba(0,0,0,0.55),
+        0 15px 40px rgba(0,0,0,0.35);
+    }
+
+    /* ── Hardware buttons — left side ──────────────────────────────── */
+    .btn-mute,
+    .btn-vol-up,
+    .btn-vol-down {
+      position: absolute;
+      left: -4px;
+      width: 4px;
+      background: linear-gradient(to right, #2a2a2a, #3d3d3d);
+      border-radius: 3px 0 0 3px;
+      box-shadow: -1px 0 2px rgba(0,0,0,0.6), inset -1px 0 1px rgba(255,255,255,0.07);
+    }
+    .btn-mute    { top: 112px; height: 30px; }
+    .btn-vol-up  { top: 164px; height: 60px; }
+    .btn-vol-down { top: 242px; height: 60px; }
+
+    /* ── Hardware button — right side (power) ──────────────────────── */
+    .btn-power {
+      position: absolute;
+      right: -4px;
+      top: 192px;
+      width: 4px;
+      height: 88px;
+      background: linear-gradient(to left, #2a2a2a, #3d3d3d);
+      border-radius: 0 3px 3px 0;
+      box-shadow: 1px 0 2px rgba(0,0,0,0.6), inset 1px 0 1px rgba(255,255,255,0.07);
+    }
+
+    /* ── Screen container ──────────────────────────────────────────── */
+    .screen {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      border-radius: 40px;
+      overflow: hidden;
+      background: #fff;
+      /* Subtle inner rim to give glass-like depth */
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    /* ── Notch ─────────────────────────────────────────────────────── */
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 34px;
+      background: #131313;
+      border-radius: 0 0 24px 24px;
+      z-index: 20;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 20px;
+    }
+
+    /* Speaker slit */
+    .notch-speaker {
+      flex: 1;
+      height: 5px;
+      background: #2e2e2e;
+      border-radius: 3px;
+    }
+
+    /* Camera */
+    .notch-camera {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #2a2a2a, #111);
+      border: 1.5px solid #2e2e2e;
+      flex-shrink: 0;
+    }
+
+    /* ── Home indicator bar ─────────────────────────────────────────── */
+    .home-bar {
+      position: absolute;
+      bottom: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: rgba(0,0,0,0.22);
+      border-radius: 3px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /* ── iframe ─────────────────────────────────────────────────────── */
+    iframe {
+      display: block;
+      width: 390px;
+      height: 844px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone">
+    <div class="btn-mute"></div>
+    <div class="btn-vol-up"></div>
+    <div class="btn-vol-down"></div>
+    <div class="btn-power"></div>
+
+    <div class="screen">
+      <div class="notch">
+        <div class="notch-speaker"></div>
+        <div class="notch-camera"></div>
+      </div>
+      <div class="home-bar"></div>
+      <iframe src="index.html" title="VGIH Mobile Dashboard"></iframe>
+    </div>
+  </div>
+
+</body>
+</html>
